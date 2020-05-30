@@ -49,6 +49,7 @@ namespace nirs
 
                 isregistered = false;
 
+               
                 // Load the colormaps from the XML file
                 XmlDocument doc = new XmlDocument();
                 doc.Load(@"DefaultConfig.xml");
@@ -62,7 +63,7 @@ namespace nirs
                 elemList = doc.GetElementsByTagName("color");
 
                 colormap = new Gdk.Color[elemList.Count];
-                
+
                 for (int i = 0; i < elemList.Count; i++)
                 {
 
@@ -74,11 +75,11 @@ namespace nirs
                     byte g = Convert.ToByte(elemListsub[0].InnerXml);
                     elemListsub = doc2.GetElementsByTagName("B");
                     byte b = Convert.ToByte(elemListsub[0].InnerXml);
-                 
-                    colormap[i] = new Gdk.Color(r, g, b);
 
+                    colormap[i] = new Gdk.Color(r, g, b);
+                    
                 }
-                
+
                 doc = new XmlDocument();
                 doc.LoadXml("<root>" + elemListAll[1].InnerXml + "</root>");
                 elemList = doc.GetElementsByTagName("color");
@@ -96,7 +97,7 @@ namespace nirs
                     byte b = Convert.ToByte(elemListsub[0].InnerXml);
                     colormapstats[i] = new Gdk.Color(r, g, b);
                 }
-
+                
             }
 
             public nirs.core.Probe Clone(){

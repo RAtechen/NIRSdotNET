@@ -5,3 +5,11 @@
 /Users/theodorehuppert/Projects/NIRSdotNET/myLSLlibrary/obj/Debug/myLSLlibrary.csproj.CoreCompileInputs.cache
 /Users/theodorehuppert/Projects/NIRSdotNET/myLSLlibrary/obj/Debug/myLSLlibrary.dll
 /Users/theodorehuppert/Projects/NIRSdotNET/myLSLlibrary/obj/Debug/myLSLlibrary.pdb
+/Users/theodorehuppert/Projects/macOS/myLSLlibrary/bin/Debug/liblsl.1.14.0.dylib
+/Users/theodorehuppert/Projects/macOS/myLSLlibrary/bin/Debug/liblsl.dylib
+/Users/theodorehuppert/Projects/macOS/myLSLlibrary/bin/Debug/myLSLlibrary.dll
+/Users/theodorehuppert/Projects/macOS/myLSLlibrary/bin/Debug/myLSLlibrary.pdb
+/Users/theodorehuppert/Projects/macOS/myLSLlibrary/obj/Debug/myLSLlibrary.csproj.CoreCompileInputs.cache
+/Users/theodorehuppert/Projects/macOS/myLSLlibrary/obj/Debug/myLSLlibrary.dll
+/Users/theodorehuppert/Projects/macOS/myLSLlibrary/obj/Debug/myLSLlibrary.pdb
+/Users/theodorehuppert/Projects/macOS/myLSLlibrary/obj/Debug/myLSLlibrary.csprojAssemblyReference.cache

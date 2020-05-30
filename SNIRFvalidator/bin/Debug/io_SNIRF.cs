@@ -25,9 +25,9 @@ namespace nirs
         public static void writeSNIRF(core.Data[] data, string filename, int nirs_index = -1)
         {
 
-            for(int i=0; i<data.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                writeSNIRF(data[i],filename, nirs_index, i);
+                writeSNIRF(data[i], filename, nirs_index, i);
             }
 
         }
@@ -43,7 +43,7 @@ namespace nirs
 
         }
 
-        public static void writeSNIRF(core.Data data, string filename,int nirs_index=-1, int data_index=0)
+        public static void writeSNIRF(core.Data data, string filename, int nirs_index = -1, int data_index = 0)
         {
             hid_t tmp;
             hid_t fileId = H5F.create(filename, H5F.ACC_TRUNC);
@@ -51,28 +51,31 @@ namespace nirs
 
             if (nirs_index == -1)
             {
-               IDnirs = H5G.create(fileId, "/nirs");
-            }else
+                IDnirs = H5G.create(fileId, "/nirs");
+            } else
             {
-               IDnirs = H5G.create(fileId, String.Format("/nirs{0}",nirs_index));
+                IDnirs = H5G.create(fileId, String.Format("/nirs{0}", nirs_index));
             }
 
 
             // formatVersion-  [string] = "1.0"
-            tmp = nirs.io.AddDataString(fileId,"formatVersion","1.0");
+            tmp = nirs.io.AddDataString(fileId, "formatVersion", "1.0");
 
 
             // Metadatatags
-            hid_t metaIdx = H5G.create(IDnirs,"metaDataTags");
+            hid_t metaIdx = H5G.create(IDnirs, "metaDataTags");
             for (int i = 0; i < data.demographics.Keys.Count; i++)
             {
-             tmp = nirs.io.AddDataString(metaIdx, data.demographics.Keys[i],
-                                        string.Format("{0}",data.demographics.get(data.demographics.Keys[i])));
+                tmp = nirs.io.AddDataString(metaIdx, data.demographics.Keys[i],
+                                           string.Format("{0}", data.demographics.get(data.demographics.Keys[i])));
             }
             tmp = nirs.io.AddDataString(metaIdx, "SNIRF_createDate", DateTime.Now.ToString("YYYY-MM-dd"));
-            tmp = nirs.io.AddDataString(metaIdx, "SNIRF_createTime", DateTime.Now.ToString("HH:mm:ss")+"Z");
+            tmp = nirs.io.AddDataString(metaIdx, "SNIRF_createTime", DateTime.Now.ToString("HH:mm:ss") + "Z");
             tmp = nirs.io.AddDataString(metaIdx, "LengthUnit", "mm");
             tmp = nirs.io.AddDataString(metaIdx, "TimeUnit", "s");
+            tmp = nirs.io.AddDataString(metaIdx, "FrequencyUnit", "MHz");
+
+
             if (!data.demographics.Keys.Contains("MeasurementDate"))
             {
                 tmp = nirs.io.AddDataString(metaIdx, "MeasurementDate", "?");
@@ -130,7 +133,7 @@ namespace nirs
             }
 
             // data#/probe/sourceLabels [string] 
-           if (data.probe.SourceLabels == null)
+            if (data.probe.SourceLabels == null)
             {
                 data.probe.SourceLabels = new string[data.probe.numSrc];
                 for (int i = 0; i < data.probe.numSrc; i++)
@@ -139,11 +142,14 @@ namespace nirs
                 }
             }
 
-            for (int i = 0; i < data.probe.numSrc; i++)
-            {
-                tmp = nirs.io.AddDataString(probeIdx, String.Format("sourceLabels{0}", i),
-                                            data.probe.SourceLabels[i]);
-            }
+
+            tmp = nirs.io.AddDataStringArray(probeIdx, "sourceLabels",
+                                               data.probe.SourceLabels);
+            //for (int i = 0; i < data.probe.numSrc; i++)
+            //{
+            //    tmp = nirs.io.AddDataString(probeIdx, String.Format("sourceLabels{0}", i),
+            //                                data.probe.SourceLabels[i]);
+            //}
 
             // data#/probe/detectorLabels [string]
             if (data.probe.DetectorLabels == null)
@@ -155,20 +161,26 @@ namespace nirs
                 }
             }
 
+            tmp = nirs.io.AddDataStringArray(probeIdx, "detectorLabels",
+                                               data.probe.DetectorLabels);
 
-            for (int i = 0; i < data.probe.numDet; i++)
-            {
-                tmp = nirs.io.AddDataString(probeIdx, String.Format("detectorLabels{0}", i),
-                                            data.probe.DetectorLabels[i]);
-            }
+            //for (int i = 0; i < data.probe.numDet; i++)
+            //{
+            //    tmp = nirs.io.AddDataString(probeIdx, String.Format("detectorLabels{0}", i),
+            //                                data.probe.DetectorLabels[i]);
+            //}
+
             // data#/probe/landmarkLabels [string]
             if (data.probe.LandmarkLabels != null)
             {
-                for (int i = 0; i < data.probe.LandmarkLabels.Length; i++)
-                {
-                    tmp = nirs.io.AddDataString(probeIdx, String.Format("landmarkLabels{0}", i),
-                                                data.probe.LandmarkLabels[i]);
-                }
+                tmp = nirs.io.AddDataStringArray(probeIdx, "landmarkLabels",
+                                                data.probe.LandmarkLabels);
+
+                //for (int i = 0; i < data.probe.LandmarkLabels.Length; i++)
+                //{
+                //    tmp = nirs.io.AddDataString(probeIdx, String.Format("landmarkLabels{0}", i),
+                //                                data.probe.LandmarkLabels[i]);
+                //}
             }
             // data#/probe/landmark [numeric array]
             if (data.probe.LandmarkPos != null)
@@ -191,21 +203,21 @@ namespace nirs
             H5G.close(probeIdx);
 
 
-            hid_t IDdata = H5G.create(IDnirs, String.Format("data{0}",data_index+1));
+            hid_t IDdata = H5G.create(IDnirs, String.Format("data{0}", data_index + 1));
 
             double[,] d = new double[data.data.Length, data.data[0].Count];
-            for(int i=0;i< data.data.Length; i++)
+            for (int i = 0; i < data.data.Length; i++)
             {
-                for(int j=0; j< data.data[i].Count; j++)
+                for (int j = 0; j < data.data[i].Count; j++)
                 {
-                    d[i,j] = data.data[i][j];
+                    d[i, j] = data.data[i][j];
                 }
             }
             tmp = nirs.io.AddDataArray(IDdata, "dataTimeSeries", d);
             // data_#/time [numeric]  time x 1
 
             double[] time = new double[data.time.Count];
-            for(int i=0; i<data.time.Count; i++)
+            for (int i = 0; i < data.time.Count; i++)
             {
                 time[i] = data.time[i];
             }
@@ -217,9 +229,9 @@ namespace nirs
             hid_t[] IDmeas = new hid_t[data.probe.numChannels];
             for (int ch = 0; ch < data.probe.numChannels; ch++)
             {
-                IDmeas[ch] = H5G.create(IDdata, String.Format("measurementList{0}",ch+1));
+                IDmeas[ch] = H5G.create(IDdata, String.Format("measurementList{0}", ch + 1));
                 //data_#/measurementList_#/sourceIndex [int; index from 1]
-                tmp = nirs.io.AddDataValue(IDmeas[ch],"sourceIndex",data.probe.ChannelMap[ch].sourceindex + 1);
+                tmp = nirs.io.AddDataValue(IDmeas[ch], "sourceIndex", data.probe.ChannelMap[ch].sourceindex + 1);
                 //data_#/measurementList_#detectorIndex [int; index from 1]
                 tmp = nirs.io.AddDataValue(IDmeas[ch], "detectorIndex", data.probe.ChannelMap[ch].detectorindex + 1);
                 //data_#/measurementList_#/wavelengthIndex [int; index from 1]
@@ -233,16 +245,16 @@ namespace nirs
 
                 //{optional}
                 //data_#/measurementList_#/sourcePower [int]
-                if(data.probe.ChannelMap[ch].SourcePower!=null){
+                if (data.probe.ChannelMap[ch].SourcePower != null) {
                     tmp = nirs.io.AddDataValue(IDmeas[ch], "sourcePower", data.probe.ChannelMap[ch].SourcePower.Value);
                 }
 
                 //data_#/measurementList_#/detectorGain [int]
-                if(data.probe.ChannelMap[ch].DetectorGain!=null){
+                if (data.probe.ChannelMap[ch].DetectorGain != null) {
                     tmp = nirs.io.AddDataValue(IDmeas[ch], "detectorGain", data.probe.ChannelMap[ch].DetectorGain.Value);
                 }
                 //data_#/measurementList_#/moduleIndex [int]
-                if(data.probe.ChannelMap[ch].moduleIndex!=null){
+                if (data.probe.ChannelMap[ch].moduleIndex != null) {
                     tmp = nirs.io.AddDataValue(IDmeas[ch], "moduleIndex", data.probe.ChannelMap[ch].moduleIndex.Value);
                 }
 
@@ -253,9 +265,9 @@ namespace nirs
 
 
             hid_t[] IDstim = new hid_t[data.stimulus.Count];
-           for (int st = 0; st < data.stimulus.Count; st++)
+            for (int st = 0; st < data.stimulus.Count; st++)
             {
-                IDstim[st] = H5G.create(IDnirs, String.Format("stim{0}", st+1));
+                IDstim[st] = H5G.create(IDnirs, String.Format("stim{0}", st + 1));
                 // data_#/stim#/name [string]
 
                 tmp = nirs.io.AddDataString(IDstim[st], "name",
@@ -264,13 +276,13 @@ namespace nirs
                 // data_#/stim#/data [numeric] <#events x 3>  onset,dur,amp
 
                 int n = data.stimulus[st].onsets.Count;
-                double[,] evt = new double[n,3];
+                double[,] evt = new double[n, 3];
 
-                for (int i = 0; i < n; i++){
+                for (int i = 0; i < n; i++) {
                     evt[i, 0] = data.stimulus[st].onsets[i];
                     evt[i, 1] = data.stimulus[st].duration[i];
                     evt[i, 2] = data.stimulus[st].amplitude[i];
-                    
+
                 }
                 tmp = nirs.io.AddDataArray(IDstim[st], "data", evt);
 
@@ -288,7 +300,7 @@ namespace nirs
                 hid_t[] IDaux = new hid_t[data.auxillaries.Length];
                 for (int st = 0; st < data.auxillaries.Length; st++)
                 {
-                    IDaux[st] = H5G.create(IDnirs, String.Format("aux{0}", st+1));
+                    IDaux[st] = H5G.create(IDnirs, String.Format("aux{0}", st + 1));
                     // data_#/aux#/name [string]
                     tmp = nirs.io.AddDataString(IDaux[st], "name", data.auxillaries[st].name);
                     // data_#/aux#/dataTimeSeries
@@ -296,7 +308,7 @@ namespace nirs
                     // data_#/aux#/time
                     tmp = nirs.io.AddDataVector(IDaux[st], "time", data.auxillaries[st].time);
                     // data_#/aux#/timeOffset
-                    if(data.auxillaries[st].timeOffset!=null){
+                    if (data.auxillaries[st].timeOffset != null) {
                         tmp = nirs.io.AddDataValue(IDaux[st], "timeOffset", data.auxillaries[st].timeOffset.Value);
 
                     }
@@ -310,10 +322,10 @@ namespace nirs
             H5F.close(fileId);
             return;
         }
-      
+
         /// Helper functions to add values, strings, and arrays
 
-        private static hid_t AddDataArray(hid_t parentLoc,string name, double[,] data){
+        private static hid_t AddDataArray(hid_t parentLoc, string name, double[,] data) {
             // Write the data to the parent field
 
             hid_t type = H5T.NATIVE_DOUBLE;
@@ -393,17 +405,17 @@ namespace nirs
             H5D.write(dataSetId, type, H5S.ALL, H5S.ALL, H5P.DEFAULT, hnd.AddrOfPinnedObject());
             hnd.Free();
             H5D.close(dataSetId);
-            
+
             return dataSetId;
         }
 
         private static hid_t AddDataString(hid_t parentLoc, string name, string data)
         {
-            
-            
+
+
             byte[][] wdata = new byte[1][];
             wdata[0] = ASCIIEncoding.ASCII.GetBytes(data);
-            int n = wdata[0].Length +1;
+            int n = wdata[0].Length + 1;
             /*
              * Create file and memory datatypes.  For this example we will save
              * the strings as FORTRAN strings, therefore they do not need space
@@ -447,7 +459,92 @@ namespace nirs
 
         }
 
+        private static hid_t AddDataStringArray(hid_t parentLoc, string name, string[] data)
+        {
 
+            int n = 0;
+            for (int i = 0; i < data.Length; i++)
+            {
+                if (n < data[i].Length)
+                {
+                    n = data[i].Length;
+                }
+
+            }
+
+            byte[][] wdata = new byte[data.Length][];
+            for (int i = 0; i < data.Length; i++)
+            {
+                wdata[i] = new byte[n];
+                byte[] tmp = ASCIIEncoding.ASCII.GetBytes(data[i]);
+                for (int j = 0; j < n; j++)
+                {
+                    wdata[i][j] = 1;
+                }
+                for (int j = 0; j < tmp.Length; j++) {
+                    wdata[i][j] = tmp[j];
+                }
+
+            }
+            byte[] wdata2 = new byte[data.Length*(n+1)];
+            int cnt = 0;
+            for (int i = 0; i < wdata.Length; i++)
+            {
+                for(int j=0; j<wdata[i].Length; j++)
+                {
+                    wdata2[cnt] = wdata[i][j];
+                    cnt++;
+                }
+                cnt++;
+            }
+
+
+                /*
+                 * Create file and memory datatypes.  For this example we will save
+                 * the strings as FORTRAN strings, therefore they do not need space
+                 * for the null terminator in the file.
+                 */
+
+            hsize_t[] dims = new hsize_t[1];
+            dims[0] = (hsize_t)data.Length;
+
+            hid_t filetype = H5T.copy(H5T.FORTRAN_S1);
+            herr_t status = H5T.set_size(filetype, new IntPtr(n));
+            hid_t memtype = H5T.copy(H5T.FORTRAN_S1);
+            status = H5T.set_size(memtype, new IntPtr(n + 1));
+
+
+
+            /*
+             * Create dataspace.  Setting maximum size to NULL sets the maximum
+             * size to be the current size.
+             */
+            hid_t space = H5S.create_simple(1, dims, null);
+            hid_t dset = H5D.create(parentLoc, name, filetype, space, H5P.DEFAULT);
+           
+            GCHandle hnd = GCHandle.Alloc(wdata2, GCHandleType.Pinned);
+             
+               status = H5D.write(dset, memtype, H5S.ALL, H5S.ALL, H5P.DEFAULT, hnd.AddrOfPinnedObject());
+                hnd.Free();
+            
+            /*
+             * Create the dataset and write the string data to it.
+             */
+
+
+            /*
+             * Close and release resources.
+             */
+            status = H5D.close(dset);
+            status = H5S.close(space);
+            status = H5T.close(filetype);
+            status = H5T.close(memtype);
+
+            return dset;
+
+
+
+        }
     }
 }
 

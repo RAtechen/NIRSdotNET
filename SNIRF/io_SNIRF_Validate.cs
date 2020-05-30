@@ -50,7 +50,7 @@ namespace nirs
             Required.Add(new Regex(@"/nirs\d*/data\d*/measurementList\d*/wavelengthIndex"));
             Required.Add(new Regex(@"/nirs\d*/data\d*/measurementList\d*/dataType"));
             Required.Add(new Regex(@"/nirs\d*/data\d*/measurementList\d*/dataTypeIndex"));
-             Required.Add(new Regex(@"/nirs\d*/probe/wavelengths"));
+            
             Required.Add(new Regex(@"/nirs\d*/probe/sourcePos\d*"));
             Required.Add(new Regex(@"/nirs\d*/probe/detectorPos\d*"));
 
@@ -61,7 +61,7 @@ namespace nirs
             Optional.Add(new Regex(@"/nirs\d*/data\d*/measurementList\d*/dataTypeLabel"));
             Optional.Add(new Regex(@"/nirs\d*/stim\w*/name"));
             Optional.Add(new Regex(@"/nirs\d*/stim\w*/data"));
-
+            Optional.Add(new Regex(@"/nirs\d*/probe/wavelengths"));
             Optional.Add(new Regex(@"/nirs\d*/aux\d*/name"));
             Optional.Add(new Regex(@"/nirs\d*/aux\d*/dataTimeSeries"));
             Optional.Add(new Regex(@"/nirs\d*/aux\d*/time"));

@@ -12,7 +12,7 @@ public partial class MainWindow : Gtk.Window
         Build();
 
         data = new core.Data[1];
-        data[0] = new nirs.core.Data();
+      //  data[0] = new nirs.core.Data();
 
 
         // This sets the drawing functions for the time-course and probe windows
@@ -35,7 +35,7 @@ public partial class MainWindow : Gtk.Window
 
         int idx = this.comboboxdataEntry.Active;
 
-        if (data[idx].data == null)
+        if (data[idx] == null)
         {
             return;
         }
@@ -95,7 +95,7 @@ public partial class MainWindow : Gtk.Window
     protected void datadraw(object sender, EventArgs e)
     {
         int idx = this.comboboxdataEntry.Active;
-        if (data[idx].data == null)
+        if (data[idx] == null)
         {
             return;
         }
