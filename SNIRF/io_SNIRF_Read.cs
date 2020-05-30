@@ -168,7 +168,7 @@ namespace nirs
                 if (nirs.io.groupexists(fileId, String.Format("{0}/probe/sourcePos2D", nirsLst[i])))
                 {
                     probes[i].SrcPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/sourcePos2D", nirsLst[i]));
-                    if (probes[i].SrcPos.GetLength(0)==3 & probes[i].SrcPos.GetLength(1)!=3)
+                    if (probes[i].SrcPos.GetLength(0)==2 & probes[i].SrcPos.GetLength(1)!=2)
                     {
                         probes[i].SrcPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/sourcePos2D", nirsLst[i]), true);
                     }
@@ -176,7 +176,7 @@ namespace nirs
                 else
                 {
                     probes[i].SrcPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/sourcePos", nirsLst[i]));
-                    if (probes[i].SrcPos.GetLength(0) == 3 & probes[i].SrcPos.GetLength(1) != 3)
+                    if (probes[i].SrcPos.GetLength(0) == 2 & probes[i].SrcPos.GetLength(1) != 2)
                     {
                         probes[i].SrcPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/sourcePos", nirsLst[i]), true);
                     }
@@ -185,7 +185,7 @@ namespace nirs
                 if (nirs.io.groupexists(fileId, String.Format("{0}/probe/detectorPos2D", nirsLst[i])))
                 {
                     probes[i].DetPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/detectorPos2D", nirsLst[i]));
-                    if (probes[i].DetPos.GetLength(0) == 3 & probes[i].SrcPos.GetLength(1) != 3)
+                    if (probes[i].DetPos.GetLength(0) == 2 & probes[i].SrcPos.GetLength(1) != 2)
                     {
                         probes[i].DetPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/detectorPos2D", nirsLst[i]), true);
                     }
@@ -193,7 +193,7 @@ namespace nirs
                 else
                 {
                     probes[i].DetPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/detectorPos", nirsLst[i]));
-                    if (probes[i].DetPos.GetLength(0) == 3 & probes[i].DetPos.GetLength(1) != 3)
+                    if (probes[i].DetPos.GetLength(0) == 2 & probes[i].DetPos.GetLength(1) != 2)
                     {
                         probes[i].DetPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/detectorPos", nirsLst[i]), true);
                     }
@@ -202,7 +202,7 @@ namespace nirs
                 
                 if (nirs.io.groupexists(fileId,String.Format( "{0}/probe/landmarkPos2D", nirsLst[i]))){
                     probes[i].LandmarkPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/landmarkPos2D", nirsLst[i]));
-                    if (probes[i].LandmarkPos.GetLength(0) == 3 & probes[i].LandmarkPos.GetLength(1) != 3)
+                    if (probes[i].LandmarkPos.GetLength(0) == 2 & probes[i].LandmarkPos.GetLength(1) != 2)
                     {
                         probes[i].LandmarkPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/landmarkPos2D", nirsLst[i]),true);
                     }
@@ -210,7 +210,7 @@ namespace nirs
                 else if(nirs.io.groupexists(fileId, String.Format("{0}/probe/landmarkPos", nirsLst[i]))){
 
                     probes[i].LandmarkPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/landmarkPos", nirsLst[i]));
-                    if (probes[i].LandmarkPos.GetLength(0) == 3 & probes[i].LandmarkPos.GetLength(1) != 3)
+                    if (probes[i].LandmarkPos.GetLength(0) == 2 & probes[i].LandmarkPos.GetLength(1) != 2)
                     {
                         probes[i].LandmarkPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/landmarkPos", nirsLst[i]),true);
                     }
@@ -357,18 +357,18 @@ namespace nirs
 
 
                 double[,] d = nirs.io.ReadDataArray(fileId, String.Format("{0}/dataTimeSeries", dataLst[i]));
-                if (d.GetLength(0) == t.Length)
+                if (d.GetLength(1) == t.Length)
                 {
                     d = nirs.io.ReadDataArray(fileId, String.Format("{0}/dataTimeSeries", dataLst[i]), true);
                 }
 
-                data[i].data = new List<double>[d.GetLength(0)];
-                for (int ii = 0; ii < d.GetLength(0); ii++)
+                data[i].data = new List<double>[d.GetLength(1)];
+                for (int ii = 0; ii < d.GetLength(1); ii++)
                 {
                     data[i].data[ii] = new List<double>();
-                    for (int jj = 0; jj < d.GetLength(1); jj++)
+                    for (int jj = 0; jj < d.GetLength(0); jj++)
                     {
-                        data[i].data[ii].Add(d[ii, jj]);
+                        data[i].data[ii].Add(d[jj, ii]);
                     }
                 }
 
@@ -443,6 +443,7 @@ namespace nirs
         private static bool groupexists(hid_t fileLoc, string name)
         {
 
+            H5E.set_auto(0, null,IntPtr.Zero);
             hid_t dId = 0;
             try
             {

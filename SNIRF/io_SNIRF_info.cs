@@ -98,7 +98,7 @@ namespace nirs
                             H5S.get_simple_extent_dims(fspace, dims, maxdims);
                         if (dims[0] == 1)
                         {
-                            hDF5Info.description = nirs.io.ReadDataString(gId, string.Format("{0}", member_name));
+                            hDF5Info.description = string.Format("\"{0}\"", nirs.io.ReadDataString(gId, string.Format("{0}", member_name)));
                         }
                         else
                         {
@@ -125,11 +125,11 @@ namespace nirs
                             {
                                 hDF5Info.description = string.Format("Array <{0} x {1}>", dims[0], dims[1]);
 
-                                if (hDF5Info.field.Contains("dataTimeSeries") & dims[0] > dims[1])
+                                if (hDF5Info.field.Contains("dataTimeSeries") & dims[1] > dims[0])
                                 {
                                     hDF5Info.description += " TRANSPOSE WARNING ";
                                 }
-                                if (hDF5Info.field.Contains("Pos") & dims[1] != 3)
+                                if (hDF5Info.field.Contains("Pos") & dims[1] > 3)
                                 {
                                     hDF5Info.description += " TRANSPOSE WARNING ";
                                 }

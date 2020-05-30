@@ -114,11 +114,26 @@ namespace nirs
 
             // TODO data#/probe/wavelengthsEmissions [numeric] 
 
-            // data#/probe/sourcePos [numeric] 
-            tmp = nirs.io.AddDataArray(probeIdx, "sourcePos2D", data.probe.SrcPos);
+            // data#/probe/sourcePos [numeric]
+            double[,] srcpos = new double[data.probe.SrcPos.GetLength(0), 2];
+            for(int ii=0; ii< data.probe.SrcPos.GetLength(0); ii++)
+            {
+                srcpos[ii, 0] = data.probe.SrcPos[ii, 0];
+                srcpos[ii, 1] = data.probe.SrcPos[ii, 1];
+            }
 
-            // data#/probe/detectorPos [numeric] 
-            tmp = nirs.io.AddDataArray(probeIdx, "detectorPos2D", data.probe.DetPos);
+            tmp = nirs.io.AddDataArray(probeIdx, "sourcePos2D", srcpos);
+
+            // data#/probe/detectorPos [numeric]
+
+            double[,] detpos = new double[data.probe.DetPos.GetLength(0), 2];
+            for (int ii = 0; ii < data.probe.DetPos.GetLength(0); ii++)
+            {
+                detpos[ii, 0] = data.probe.DetPos[ii, 0];
+                detpos[ii, 1] = data.probe.DetPos[ii, 1];
+            }
+
+            tmp = nirs.io.AddDataArray(probeIdx, "detectorPos2D", detpos);
 
             if (data.probe.SrcPos3D != null)
             {
@@ -185,7 +200,13 @@ namespace nirs
             // data#/probe/landmark [numeric array]
             if (data.probe.LandmarkPos != null)
             {
-                tmp = nirs.io.AddDataArray(probeIdx, "landmarkPos2D", data.probe.LandmarkPos);
+                double[,] lmpos = new double[data.probe.LandmarkPos.GetLength(0), 2];
+                for (int ii = 0; ii < data.probe.LandmarkPos.GetLength(0); ii++)
+                {
+                    lmpos[ii, 0] = data.probe.LandmarkPos[ii, 0];
+                    lmpos[ii, 1] = data.probe.LandmarkPos[ii, 1];
+                }
+                tmp = nirs.io.AddDataArray(probeIdx, "landmarkPos2D", lmpos);
             }
 
 
@@ -205,12 +226,12 @@ namespace nirs
 
             hid_t IDdata = H5G.create(IDnirs, String.Format("data{0}", data_index + 1));
 
-            double[,] d = new double[data.data.Length, data.data[0].Count];
+            double[,] d = new double[data.data[0].Count,data.data.Length];
             for (int i = 0; i < data.data.Length; i++)
             {
                 for (int j = 0; j < data.data[i].Count; j++)
                 {
-                    d[i, j] = data.data[i][j];
+                    d[j, i] = data.data[i][j];
                 }
             }
             tmp = nirs.io.AddDataArray(IDdata, "dataTimeSeries", d);
