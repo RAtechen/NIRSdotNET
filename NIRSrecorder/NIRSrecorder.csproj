@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -20,7 +20,6 @@
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -29,7 +28,6 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -47,7 +45,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Serialization" />
     <Reference Include="MathNet.Numerics">
-      <HintPath>..\packages\MathNet.Numerics.4.9.1\lib\net461\MathNet.Numerics.dll</HintPath>
+      <HintPath>..\packages\MathNet.Numerics.4.11.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -59,9 +57,6 @@
       <HintPath>..\packages\MathNet.Filtering.Kalman.0.7.0\lib\net461\MathNet.Filtering.Kalman.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
-    <Reference Include="HDF.PInvoke">
-      <HintPath>..\packages\HDF.PInvoke.NETStandard.1.10.502\lib\netstandard2.0\HDF.PInvoke.dll</HintPath>
-    </Reference>
     <Reference Include="System.ValueTuple">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -99,6 +94,10 @@
     <Compile Include="gtk-gui\NIRSrecorder.RegisterSubjectDialog.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HDF.PInvoke\HDF.PInvoke.csproj">
+      <Project>{4450f800-93e2-4d4a-b224-966e2338cded}</Project>
+      <Name>HDF.PInvoke</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NIRSDAQ\NIRSDAQ.csproj">
       <Project>{AD341F6F-9ABF-4462-BD8D-4531A8113EA7}</Project>
       <Name>NIRSDAQ</Name>

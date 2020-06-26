@@ -42,9 +42,15 @@ namespace HDF.PInvoke
             switch (Environment.OSVersion.Platform)
             {
             case PlatformID.Win32NT:
-            case PlatformID.Win32S:
-            case PlatformID.Win32Windows:
-            case PlatformID.WinCE:
+                    Instance = new H5WindowsDLLImporter(Constants.DLLFileName);
+                    break;
+                case PlatformID.Win32S:
+                    Instance = new H5WindowsDLLImporter(Constants.DLLFileName);
+                    break;
+                case PlatformID.Win32Windows:
+                    Instance = new H5WindowsDLLImporter(Constants.DLLFileName);
+                    break;
+                case PlatformID.WinCE:
                     Instance = new H5WindowsDLLImporter(Constants.DLLFileName);
                     break;
             case PlatformID.Xbox:
@@ -56,7 +62,8 @@ namespace HDF.PInvoke
                     Instance = new H5UnixDllImporter(Constants.DLLFileName);
                 break;
             default:
-                throw new NotImplementedException();;
+                    Instance = new H5WindowsDLLImporter(Constants.DLLFileName);
+                    break;
             }
         }
 

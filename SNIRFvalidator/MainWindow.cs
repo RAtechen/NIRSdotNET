@@ -10,7 +10,7 @@ public partial class MainWindow : Gtk.Window
     public MainWindow() : base(Gtk.WindowType.Toplevel)
     {
         Build();
-
+       
         data = new core.Data[1];
         data[0] = new nirs.core.Data();
 

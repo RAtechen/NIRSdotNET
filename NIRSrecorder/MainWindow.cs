@@ -251,17 +251,16 @@ public partial class MainWindow : Window
         }
 
 
-
         // If the device already has some connected
         if (MainClass.devices != null)
         {
-            for(int i=0; i<MainClass.devices.Length; i++)
+            for (int j = 0; j < MainClass.devices.Length; j++)
             {
-                MainClass.devices[i].Disconnect();
+                MainClass.devices[j].Disconnect();
             }
 
-
         }
+
         MainClass.devices = new NIRSDAQ.Instrument.instrument[ports2.Count];
         for (int i = 0; i < ports2.Count; i++)
         {
@@ -271,24 +270,24 @@ public partial class MainWindow : Window
             DebugMessage(string.Format("Connected to device {0}", i + 1));
         }
 
-        if(nirsdata != null)
+
+        if (nirsdata != null)
         {
             if (nirsdata.Count > ports2.Count)
             {
                 nirsdata.RemoveRange(ports2.Count, nirsdata.Count - ports2.Count);
             }
-            if (nirsdata.Count < ports2.Count)
+            if(nirsdata.Count< ports2.Count)
             {
                 if (nirsdata.Count > 0)
                 {
-                    for (int i = nirsdata.Count - 1; i < ports2.Count; i++)
+                    for(int i=nirsdata.Count-1; i<ports2.Count; i++)
                     {
                         nirsdata.Add(nirsdata[0]);
                     }
                 }
             }
         }
-
 
         for (int i = 0; i < ports.Count; i++)
         {
@@ -497,6 +496,7 @@ public partial class MainWindow : Window
             combobox_device2.Hide();
             MultipleDevicesAction.Sensitive = true;
             SingleViewAction.Active = false;
+
             DualViewAction.Sensitive = true;
             SingleViewAction.Sensitive = true;
             drawingarea_Data2.Hide();

@@ -280,10 +280,12 @@ public partial class MainWindow : Window
 
             Gtk.ListStore ClearList = new Gtk.ListStore(typeof(string));
             combobox_statusBattery.Model = ClearList;
-            for (int i = 0; i < MainClass.devices.Length; i++)
+            if (MainClass.devices != null) { }
+            for (int i = 0; i < MainClass.devices.Length; i++) { 
             {
                 combobox_statusBattery.AppendText(string.Format("{0} {1}", info[i].PortName, battery[i]));
             }
+        }
             combobox_statusBattery.Active = id;
 
         }
