@@ -23,6 +23,9 @@ public partial class MainWindow : Window
     public void IntializeGUI()
     {
 
+        int DefaultLaserPower = 50;
+        int DefaultDetGain = 35;
+
         SaveSnirfFormatAction.Active = false;
         MainClass.obj_Splash.label.Text = string.Format("Finding Devices: {0}", settings.SYSTEM);
         MainClass.obj_Splash.QueueDraw();
@@ -72,6 +75,8 @@ public partial class MainWindow : Window
 
         EnableControls(false);
 
+    
+
         scancount = 0;
 
         _handles = new Handles
@@ -104,8 +109,9 @@ public partial class MainWindow : Window
            SetupGUI(ports);
         }
 
+        spinbutton1.Value = DefaultDetGain;
+        spinbutton3.Value = DefaultLaserPower;
 
-        
 
         Gtk.ListStore ClearList = new Gtk.ListStore(typeof(string));
         combobox_statusBattery.Model = ClearList;
@@ -299,8 +305,8 @@ public partial class MainWindow : Window
             _info.numDet = settings.system_Info.numdet;
             _info.numSrc = settings.system_Info.numsrc;
 
-            
-                               
+
+
             HBox hBox = new HBox(true, 0);
             Label label = new Label();
             for (int j = 0; j < _info.numDet; j++)
@@ -314,13 +320,19 @@ public partial class MainWindow : Window
                     };
                     notebook_detectors.InsertPage(hBox, label, notebook_detectors.NPages);
                 }
-                Detector det = new Detector
+                Detector det = new Detector();
+                det.detectorIdx = j;
+                det.deviceIdx = i;
+                det.gain = 0;
+                if (_info.DeviceName.Contains("BTNIRS"))
                 {
-                    detectorIdx = j,
-                    deviceIdx = i,
-                    gain = 0,
-                    name = string.Format("Det-{0}", j + 1)
-                };
+                    det.name = string.Format("Dets-{0}-{1}", j * 4 + 1, j * 4 + 4);
+                }
+                else
+                {
+                    det.name = string.Format("Det-{0}", j + 1);
+                }
+
 
                 det.frame = new Frame(det.name);
                 VBox _box = new VBox(false, 0);
@@ -414,7 +426,23 @@ public partial class MainWindow : Window
                 _handles.lasers.Add(src);
             }
 
+            // Set the gains and laser power to match the GUI
+            int gain = (int)this.spinbutton1.Value;
+            for (int ii = 0; ii < _handles.detectors.Count; ii++)
+            {
+                Detector detector = _handles.detectors[ii];
+                detector.vScale.Value = gain;
+            }
 
+            gain = (int)spinbutton3.Value;
+            for (int ii = 0; ii < _handles.lasers.Count; ii++)
+            {
+                Lasers lasers = _handles.lasers[ii];
+                for (int k = 0; k < lasers.spinButtons.Length; k++)
+                {
+                    lasers.spinButtons[k].Value = gain;
+                }
+            }
         }
 
         string path = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);

@@ -45,7 +45,6 @@
 /Users/theodorehuppert/Projects/NIRSdotNET/macOS/SNIRFvalidator/bin/Debug/csmatio.dll
 /Users/theodorehuppert/Projects/NIRSdotNET/macOS/SNIRFvalidator/bin/Debug/SNIRF.pdb
 /Users/theodorehuppert/Projects/NIRSdotNET/macOS/SNIRFvalidator/bin/Debug/HDF.PInvoke.dll.config
-/Users/theodorehuppert/Projects/NIRSdotNET/macOS/SNIRFvalidator/obj/Debug/SNIRFvalidator.csprojAssemblyReference.cache
 /Users/theodorehuppert/Projects/NIRSdotNET/macOS/SNIRFvalidator/obj/Debug/SNIRFvalidator.exe.config
 /Users/theodorehuppert/Projects/NIRSdotNET/macOS/SNIRFvalidator/obj/Debug/SNIRFvalidator.csproj.CoreCompileInputs.cache
 /Users/theodorehuppert/Projects/NIRSdotNET/macOS/SNIRFvalidator/obj/Debug/SNIRFvalidator.csproj.CopyComplete

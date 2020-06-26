@@ -1,9 +1,13 @@
 ﻿<Properties StartupConfiguration="{1B6462A9-7434-490C-B65C-91498B6FFA3F}|Default">
   <MonoDevelop.Ide.ItemProperties.NIRSrecorder PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.ItemProperties.SNIRFvalidator PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="NIRSrecorder/RealTimeControls.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="NIRSDAQ/BTNIRS.cs">
     <Files>
-      <File FileName="NIRSrecorder/RealTimeControls.cs" Line="255" Column="3" />
+      <File FileName="NIRSrecorder/MainWindow_Controls.cs" Line="36" Column="18" />
+      <File FileName="NIRSrecorder/MainWindow.cs" Line="113" Column="47" />
+      <File FileName="NIRSrecorder/MainWindow_Detectors.cs" Line="23" Column="16" />
+      <File FileName="NIRSrecorder/MainWindow_Sources.cs" Line="117" Column="7" />
+      <File FileName="NIRSDAQ/BTNIRS.cs" Line="18" Column="17" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,11 +15,11 @@
           <Node name="NIRSdotNET" expanded="True">
             <Node name="myLSLlibrary" expanded="True" />
             <Node name="NIRSconverter" expanded="True" />
-            <Node name="NIRSDAQ" expanded="True" />
-            <Node name="NIRSdotNET" expanded="True" />
-            <Node name="NIRSrecorder" expanded="True">
-              <Node name="RealTimeControls.cs" selected="True" />
+            <Node name="NIRSDAQ" expanded="True">
+              <Node name="BTNIRS.cs" selected="True" />
             </Node>
+            <Node name="NIRSdotNET" expanded="True" />
+            <Node name="NIRSrecorder" expanded="True" />
           </Node>
         </State>
       </Pad>

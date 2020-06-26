@@ -964,7 +964,6 @@ Type 4</property>
                                         <property name="Type">TextOnly</property>
                                         <property name="Label" translatable="yes">Auto-Adjust</property>
                                         <property name="UseUnderline">True</property>
-                                        <signal name="Clicked" handler="AutoAdjust" />
                                       </widget>
                                       <packing>
                                         <property name="Position">0</property>
@@ -1067,7 +1066,7 @@ Type 4</property>
                             <property name="WidthRequest">524</property>
                             <property name="HeightRequest">200</property>
                             <property name="CanFocus">True</property>
-                            <property name="CurrentPage">2</property>
+                            <property name="CurrentPage">1</property>
                             <property name="TabPos">Left</property>
                             <property name="BorderWidth">6</property>
                             <child>
@@ -1387,7 +1386,6 @@ Type 4</property>
                                                             <property name="DrawIndicator">True</property>
                                                             <property name="HasLabel">True</property>
                                                             <property name="UseUnderline">True</property>
-                                                            <signal name="Toggled" handler="ToggleLSLStimInlet" />
                                                           </widget>
                                                           <packing>
                                                             <property name="Position">1</property>
@@ -1538,7 +1536,6 @@ Type 4</property>
                                         <property name="MemberName" />
                                         <property name="IsTextCombo">True</property>
                                         <property name="Items" translatable="yes">----------------------------</property>
-                                        <signal name="Changed" handler="ChangedDemoDevice" />
                                       </widget>
                                       <packing>
                                         <property name="Position">1</property>
@@ -1554,7 +1551,6 @@ Type 4</property>
                                         <property name="Type">TextOnly</property>
                                         <property name="Label" translatable="yes">Identify</property>
                                         <property name="UseUnderline">True</property>
-                                        <signal name="Clicked" handler="DemoIDdevice" />
                                       </widget>
                                       <packing>
                                         <property name="Position">2</property>
@@ -1618,7 +1614,6 @@ Type 4</property>
 Female
 Other
 Unknown</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="TopAttach">2</property>
@@ -1665,7 +1660,6 @@ Unknown</property>
                                                         <property name="CanFocus">True</property>
                                                         <property name="IsEditable">True</property>
                                                         <property name="InvisibleChar">●</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="TopAttach">3</property>
@@ -1690,7 +1684,6 @@ Unknown</property>
                                                         <property name="Text" translatable="yes">Custom1</property>
                                                         <property name="IsEditable">True</property>
                                                         <property name="InvisibleChar">●</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="TopAttach">5</property>
@@ -1712,7 +1705,6 @@ Unknown</property>
                                                         <property name="CanFocus">True</property>
                                                         <property name="IsEditable">True</property>
                                                         <property name="InvisibleChar">●</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="TopAttach">5</property>
@@ -1737,7 +1729,6 @@ Unknown</property>
                                                         <property name="Text" translatable="yes">Custom2</property>
                                                         <property name="IsEditable">True</property>
                                                         <property name="InvisibleChar">●</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="TopAttach">6</property>
@@ -1759,7 +1750,6 @@ Unknown</property>
                                                         <property name="CanFocus">True</property>
                                                         <property name="IsEditable">True</property>
                                                         <property name="InvisibleChar">●</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="TopAttach">6</property>
@@ -1784,7 +1774,6 @@ Unknown</property>
                                                         <property name="Text" translatable="yes">Custom3</property>
                                                         <property name="IsEditable">True</property>
                                                         <property name="InvisibleChar">●</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="TopAttach">7</property>
@@ -1806,7 +1795,6 @@ Unknown</property>
                                                         <property name="CanFocus">True</property>
                                                         <property name="IsEditable">True</property>
                                                         <property name="InvisibleChar">●</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="TopAttach">7</property>
@@ -1830,7 +1818,6 @@ Unknown</property>
                                                         <property name="CanFocus">True</property>
                                                         <property name="IsEditable">True</property>
                                                         <property name="InvisibleChar">●</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="TopAttach">4</property>
@@ -1854,7 +1841,6 @@ Unknown</property>
                                                         <property name="CanFocus">True</property>
                                                         <property name="IsEditable">True</property>
                                                         <property name="InvisibleChar">●</property>
-                                                        <signal name="Changed" handler="ChangedDemo" after="yes" />
                                                       </widget>
                                                       <packing>
                                                         <property name="LeftAttach">1</property>
