@@ -287,7 +287,10 @@ namespace NIRSDAQ
                         {
                             isrunning = false;
                             SendCommMsg("STP");
-                            newthread.Abort();
+                            if (newthread != null)
+                            {
+                                newthread.Abort();
+                            }
                         }
                     }
 
