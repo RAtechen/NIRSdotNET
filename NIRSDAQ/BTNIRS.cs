@@ -36,7 +36,7 @@ namespace NIRSDAQ
                     private int wordsperrecord;
 
                     public int _nsrcs = 8;
-                    public int _ndets = 8;
+                    public int _ndets = 2;
 
                     // num measurements
                     private int _nmeas = 32;
@@ -49,7 +49,7 @@ namespace NIRSDAQ
                     {
                         // Sets the mapping between data and the probe.
 
-                        wavelengths = new int[] { 850, 735 };
+                        wavelengths = new int[] {735, 850 };
                         int[] DetIdx = new int[] { 1, 5, 1, 5, 1, 5, 1, 5, 2, 6, 2, 6, 2, 6, 2, 6, 3, 7, 3, 7, 3, 7, 3, 7, 4, 8, 4, 8, 4, 8, 4, 8 };
                         int[] SrcIdx = new int[] { 1, 3, 1, 3, 2, 4, 2, 4, 1, 3, 1, 3, 2, 4, 2, 4, 1, 3, 1, 3, 2, 4, 2, 4, 1, 3, 1, 3, 2, 4, 2, 4 };
                         int[] TypIdx = new int[] { 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1, 2, 2 };
@@ -77,7 +77,7 @@ namespace NIRSDAQ
 
                         }
 
-
+                        SetFilter(true);
 
 
                     }
@@ -301,7 +301,7 @@ namespace NIRSDAQ
                         if (pwr > 127) { pwr = 127; }
 
                         laserpower[sIdx] = pwr;
-                        SendCommMsg(string.Format("SLE {0} {1}", sIdx, pwr));
+                        SendCommMsg(string.Format("SLE {0} {1}", sIdx+1, pwr));
                     }
 
 
@@ -353,11 +353,11 @@ namespace NIRSDAQ
                         laserstates[sIdx] = state;
                         if (state)
                         {
-                            SendCommMsg(String.Format("SSO {0} 1", sIdx));
+                            SendCommMsg(String.Format("SSO {0} 1", sIdx+1));
                         }
                         else
                         {
-                            SendCommMsg(String.Format("SSO {0} 0", sIdx));
+                            SendCommMsg(String.Format("SSO {0} 0", sIdx+1));
                         }
 
 
@@ -368,8 +368,8 @@ namespace NIRSDAQ
                         if (gain > 127) { gain = 127; }
                         detgains[dIdx] = gain;
 
-                        SendCommMsg(String.Format("SDG {0} {1}", dIdx, gain));
-
+                        SendCommMsg(String.Format("SDG {0} {1}", 4*dIdx+1, gain));
+                       
                     }
 
                     public void AllOn()
