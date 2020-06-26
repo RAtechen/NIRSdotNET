@@ -183,7 +183,13 @@ public partial class MainWindow : Window
         {
             return;
         }
-        double tMin = Math.Max(nirsdata[0].time[nirsdata[0].time.Count - 1] - Convert.ToDouble(entry_timeWindow.Text), 0);
+
+        double timwin = 0;
+        double tMin = 0;
+        if (double.TryParse(entry_timeWindow.Text, out timwin))
+        {
+            tMin = Math.Max(nirsdata[0].time[nirsdata[0].time.Count - 1] - timwin, 0);
+        }
         if (!checkbutton_timeWindow.Active)
         {
             tMin = 0;

@@ -31,9 +31,12 @@ namespace NIRSrecorder
 
 			bool usehpf = MainClass.win._handles.useHPF.Active;
 			bool uselpf = MainClass.win._handles.useLPF.Active;
-	
-			double hpf = Convert.ToDouble(MainClass.win._handles.editHPF.Text);
-			double lpf = Convert.ToDouble(MainClass.win._handles.editLPF.Text);
+
+			double hpf;
+			usehpf= (usehpf & double.TryParse(MainClass.win._handles.editHPF.Text, out hpf));
+
+			double lpf;
+			uselpf = (uselpf & double.TryParse(MainClass.win._handles.editLPF.Text,out lpf));
 
 			double[] fs = new double[MainClass.devices.Length];
 			OnlineFIRFiltersHPF = new OnlineFilter[MainClass.devices.Length][];
@@ -152,6 +155,8 @@ namespace NIRSrecorder
 
 			for (int i = 0; i < nirsdata.Count; i++) { 
 				nsamplesNew = nirsdata[i].data[0].Count;
+				NIRSDAQ.info info = MainClass.devices[i].GetInfo();
+				double fs = info.sample_rate;
 
 				for (int tpt = nsamples[i]; tpt < nsamplesNew; tpt++)
 				{
@@ -190,7 +195,7 @@ namespace NIRSrecorder
 						}
 						if (uselpf)
 						{
-							d = OnlineFIRFiltersLPF[i][j].ProcessSample(d);
+							d = OnlineFIRFiltersLPF[i][j].ProcessSample(d)/fs/2;
 						}
 						else
 						{
@@ -244,120 +249,6 @@ namespace NIRSrecorder
         }
 
 
-        /*
-			int lastID = 1;
-			if (this.useMBLL())
-			{
-				// MBLL
-		
-				double E11, E12, E21, E22;
-				int sIdx1, sIdx2;
-
-				int numml = data[0].SDGRef.nummeas;
-				for (int i = oldsamples + 1; i < samples; i++)
-				{
-					double[] d = new double[numml * 2];
-					double t = data[0].time[i];
-					for (int j = 0; j < numml; j++)
-					{
-						sIdx1 = data[0].SDGRef.measlist[j, 3];
-						E11 = AppWindow.SystemController.systemInfo.laserarray[sIdx1].ExtHbO;
-						E12 = AppWindow.SystemController.systemInfo.laserarray[sIdx1].ExtHbR;
-						sIdx2 = data[0].SDGRef.measlist[j + numml, 3];
-						E21 = AppWindow.SystemController.systemInfo.laserarray[sIdx2].ExtHbO;
-						E22 = AppWindow.SystemController.systemInfo.laserarray[sIdx2].ExtHbR;
-
-						double L = data[0].SDGRef.distances[j];
-						d[j] = 1000000 * 1 / L * (E22 * data[1].data[j, i] - E12 * data[1].data[j + numml, i]) / (E11 * E11 - E12 * E21);
-						d[j + numml] = 1000000 * 1 / L * (E21 * data[1].data[j + numml, i] - E11 * data[1].data[j, i]) / (E11 * E11 - E12 * E21);
-
-					}
-					data[2].adddata(d, t);
-				}
-				data[2].SDGRef = data[0].SDGRef;
-				data[2].StimInfo = data[0].StimInfo;
-				lastID = 2;
-			}
-
-			if (useGLM())
-			{
-				for (int i = oldsamples + 1; i < samples; i++)
-				{
-					double q = hscaleKalmanQ.Value;
-					double[] d = new double[nm];
-					double[] t = new double[1];
-					t[0] = data[0].time[i];
-
-					var x = data[0].StimInfo.GetDesignMtx(t);
-
-					int order = 5;
-					var H = MathNet.Numerics.LinearAlgebra.Matrix<double>.Build.Dense(1, order + 1);
-					var F = MathNet.Numerics.LinearAlgebra.Matrix<double>.Build.DenseIdentity(order + 1);
-					var Q = MathNet.Numerics.LinearAlgebra.Matrix<double>.Build.Dense(order + 1, order + 1, q);
-
-					for (int j = 0; j < x.ColumnCount - 1; j++)
-					{  //DC regressor is always end
-						H[0, j] = x[0, j];
-					}
-					for (int j = x.ColumnCount - 1; j < order + 1; j++)
-					{
-						H[0, j] = 0;
-					}
-					H[0, order] = 1; // DC regressor at the end
-
-					var B = MathNet.Numerics.LinearAlgebra.Matrix<double>.Build.Dense(order + 1, nm);
-					MathNet.Numerics.LinearAlgebra.Matrix<double>[] C = new MathNet.Numerics.LinearAlgebra.Matrix<double>[nm];
-					var R = MathNet.Numerics.LinearAlgebra.Matrix<double>.Build.Dense(1, 1, .001);
-					for (int j = 0; j < nm; j++)
-					{
-						d[j] = data[lastID].data[j, i];
-
-						var z = MathNet.Numerics.LinearAlgebra.Matrix<double>.Build.Dense(1, 1, d[j]);
-
-						GLMKalman[j].Predict(F, Q);
-						GLMKalman[j].Update(z, H, R);
-
-						var b = GLMKalman[j].State;
-						for (int k = 0; k < order + 1; k++)
-						{
-							B[k, j] = b[k, 0];
-						}
-						C[j] = GLMKalman[j].Cov;
-
-					}
-					statswindow.update(B, C, data[2].StimInfo.conditions, samples);
-
-				}
-			}
-
-
-			if (this.checkbuttonDataXfer.Active)
-			{
-				string dataout = "";
-				if (this.checkbuttonDataXfer.Active)
-				{
-					for (int i = oldsamples + 1; i < samples; i++)
-					{
-						dataout += String.Format("{0}", data[this.comboboxwhichXfer.Active].time[i]);
-						for (int j = 0; j < nm; j++)
-						{
-							dataout += String.Format("\t{0}", data[this.comboboxwhichXfer.Active].data[j, i]);
-						}
-						dataout += "\r\n";
-					}
-				}
-
-				// Transfer the data in real-time to a file
-				string file = entryRTfileName.Text;
-				string rtXferfile = System.IO.Path.Combine(PhotonViewer.AppWindow.SystemController.subjectData.outfolder, file);
-				System.IO.File.AppendAllText(rtXferfile, dataout);
-			}
-
-
-			return data;
-
-		}
-        */
 	}
 }
 

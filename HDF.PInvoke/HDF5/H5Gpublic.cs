@@ -351,6 +351,12 @@ namespace HDF.PInvoke
         SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
         public extern static ssize_t get_objname_by_idx(hid_t group_id, hsize_t idx, [In][Out] StringBuilder name, ssize_t size);
 
+        [DllImport(Constants.DLLFileName, EntryPoint = "H5Gget_objinfo",
+        CallingConvention = CallingConvention.Cdecl,
+        CharSet = CharSet.Ansi),
+        SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+        public extern static herr_t get_objinfo(hid_t group_id, byte[] name, hbool_t follow_link);
+        
 
         [DllImport(Constants.DLLFileName, EntryPoint = "H5Gget_objtype_by_idx",
         CallingConvention = CallingConvention.Cdecl,

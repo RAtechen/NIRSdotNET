@@ -29,8 +29,7 @@ public partial class MainWindow : Window
     // GUI close function.     
     protected void OnDeleteEvent(object sender, DeleteEventArgs a)
     {
-        if (MainClass.devices != null)
-        {
+        if (MainClass.devices!= null){
             for (int i = 0; i < MainClass.devices.Length; i++)
             {
                 MainClass.devices[i].Stop();
@@ -70,15 +69,26 @@ public partial class MainWindow : Window
     // Menu item to close program
     protected void ExitGUI(object sender, EventArgs e)
     {
-        for (int i = 0; i < MainClass.devices.Length; i++)
+        if (MainClass.devices != null)
         {
-            MainClass.devices[i].Stop();
-            MainClass.devices[i].AllOff();
-            MainClass.devices[i].FlushBuffer();
+            for (int i = 0; i < MainClass.devices.Length; i++)
+            {
+                MainClass.devices[i].Stop();
+                MainClass.devices[i].AllOff();
+                MainClass.devices[i].FlushBuffer();
+                if (maindisplaythread != null)
+                {
+                    maindisplaythread.Abort();
+                }
+            }
         }
-
+        if (batteryCheck != null)
+        {
+            batteryCheck.Abort();
+        }
+       
         Destroy();
-
+        Application.Quit();
     }
 
     // Menu item for About menu info

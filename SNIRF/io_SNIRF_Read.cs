@@ -152,9 +152,9 @@ namespace nirs
                     }
                 }
 
-
+               
                     // read the probe
-                    probes[i] = new core.Probe();
+                probes[i] = new core.Probe();
 
                 double[] wav;
                 if (nirs.io.groupexists(fileId, String.Format("{0}/probe/wavelengths", nirsLst[i])))
@@ -168,7 +168,7 @@ namespace nirs
                 if (nirs.io.groupexists(fileId, String.Format("{0}/probe/sourcePos2D", nirsLst[i])))
                 {
                     probes[i].SrcPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/sourcePos2D", nirsLst[i]));
-                    if (probes[i].SrcPos.GetLength(0)==3 & probes[i].SrcPos.GetLength(1)!=3)
+                    if (probes[i].SrcPos.GetLength(0)==2 & probes[i].SrcPos.GetLength(1)!=2)
                     {
                         probes[i].SrcPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/sourcePos2D", nirsLst[i]), true);
                     }
@@ -176,7 +176,7 @@ namespace nirs
                 else
                 {
                     probes[i].SrcPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/sourcePos", nirsLst[i]));
-                    if (probes[i].SrcPos.GetLength(0) == 3 & probes[i].SrcPos.GetLength(1) != 3)
+                    if (probes[i].SrcPos.GetLength(0) == 2 & probes[i].SrcPos.GetLength(1) != 2)
                     {
                         probes[i].SrcPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/sourcePos", nirsLst[i]), true);
                     }
@@ -185,7 +185,7 @@ namespace nirs
                 if (nirs.io.groupexists(fileId, String.Format("{0}/probe/detectorPos2D", nirsLst[i])))
                 {
                     probes[i].DetPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/detectorPos2D", nirsLst[i]));
-                    if (probes[i].DetPos.GetLength(0) == 3 & probes[i].SrcPos.GetLength(1) != 3)
+                    if (probes[i].DetPos.GetLength(0) == 2 & probes[i].SrcPos.GetLength(1) != 2)
                     {
                         probes[i].DetPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/detectorPos2D", nirsLst[i]), true);
                     }
@@ -193,7 +193,7 @@ namespace nirs
                 else
                 {
                     probes[i].DetPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/detectorPos", nirsLst[i]));
-                    if (probes[i].DetPos.GetLength(0) == 3 & probes[i].DetPos.GetLength(1) != 3)
+                    if (probes[i].DetPos.GetLength(0) == 2 & probes[i].DetPos.GetLength(1) != 2)
                     {
                         probes[i].DetPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/detectorPos", nirsLst[i]), true);
                     }
@@ -202,7 +202,7 @@ namespace nirs
                 
                 if (nirs.io.groupexists(fileId,String.Format( "{0}/probe/landmarkPos2D", nirsLst[i]))){
                     probes[i].LandmarkPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/landmarkPos2D", nirsLst[i]));
-                    if (probes[i].LandmarkPos.GetLength(0) == 3 & probes[i].LandmarkPos.GetLength(1) != 3)
+                    if (probes[i].LandmarkPos.GetLength(0) == 2 & probes[i].LandmarkPos.GetLength(1) != 2)
                     {
                         probes[i].LandmarkPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/landmarkPos2D", nirsLst[i]),true);
                     }
@@ -210,7 +210,7 @@ namespace nirs
                 else if(nirs.io.groupexists(fileId, String.Format("{0}/probe/landmarkPos", nirsLst[i]))){
 
                     probes[i].LandmarkPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/landmarkPos", nirsLst[i]));
-                    if (probes[i].LandmarkPos.GetLength(0) == 3 & probes[i].LandmarkPos.GetLength(1) != 3)
+                    if (probes[i].LandmarkPos.GetLength(0) == 2 & probes[i].LandmarkPos.GetLength(1) != 2)
                     {
                         probes[i].LandmarkPos = nirs.io.ReadDataArray(fileId, String.Format("{0}/probe/landmarkPos", nirsLst[i]),true);
                     }
@@ -252,42 +252,62 @@ namespace nirs
 
 
                 probes[i].SourceLabels = new string[probes[i].SrcPos.GetLength(0)];
-                for (int j = 0; j < probes[i].SrcPos.GetLength(0); j++)
-                {
-                    if (nirs.io.groupexists(fileId, String.Format("{0}/probe/sourceLabels{1}", nirsLst[i], j + 1)))
-                    {
-                        probes[i].SourceLabels[j] = nirs.io.ReadDataString(fileId, String.Format("{0}/probe/sourceLabels{1}", nirsLst[i], j + 1));
-                    }
-                    else
-                    {
-                        probes[i].SourceLabels[j] = string.Format("Source-{0}", j + 1);
-                    }
-                }
-                probes[i].DetectorLabels = new string[probes[i].DetPos.GetLength(0)];
-                for (int j = 0; j < probes[i].DetPos.GetLength(0); j++)
-                {
-                    if (nirs.io.groupexists(fileId, String.Format("{0}/probe/detectorLabels{1}", nirsLst[i], j + 1)))
-                    {
-                        probes[i].DetectorLabels[j] = nirs.io.ReadDataString(fileId, String.Format("{0}/probe/detectorLabels{1}", nirsLst[i], j + 1));
-                    }
-                    else
-                    {
-                        probes[i].DetectorLabels[j] = string.Format("Detector-{0}", j + 1);
-                    }
-                }
 
-                if (probes[i].LandmarkPos != null)
-                {
-                    probes[i].LandmarkLabels = new string[probes[i].LandmarkPos.GetLength(0)];
-                    for (int j = 0; j < probes[i].LandmarkPos.GetLength(0); j++)
+                if (nirs.io.groupexists(fileId, String.Format("{0}/probe/sourceLabels", nirsLst[i]))){
+                    probes[i].SourceLabels = nirs.io.ReadDataStringArray(fileId,String.Format("{0}/probe/sourceLabels", nirsLst[i]));
+                }
+                else {
+
+                    for (int j = 0; j < probes[i].SrcPos.GetLength(0); j++)
                     {
-                        if (nirs.io.groupexists(fileId, String.Format("{0}/probe/landmarkLabels{1}", nirsLst[i], j + 1)))
+                        if (nirs.io.groupexists(fileId, String.Format("{0}/probe/sourceLabels{1}", nirsLst[i], j + 1)))
                         {
-                            probes[i].LandmarkLabels[j] = nirs.io.ReadDataString(fileId, String.Format("{0}/probe/landmarkLabels{1}", nirsLst[i], j + 1));
+                            probes[i].SourceLabels[j] = nirs.io.ReadDataString(fileId, String.Format("{0}/probe/sourceLabels{1}", nirsLst[i], j + 1));
                         }
                         else
                         {
-                            probes[i].LandmarkLabels[j] = string.Format("Landmark-{0}", j + 1);
+                            probes[i].SourceLabels[j] = string.Format("Source-{0}", j + 1);
+                        }
+                    }
+                }
+                probes[i].DetectorLabels = new string[probes[i].DetPos.GetLength(0)];
+                if (nirs.io.groupexists(fileId, String.Format("{0}/probe/detectorLabels", nirsLst[i])))
+                {
+                    probes[i].DetectorLabels = nirs.io.ReadDataStringArray(fileId,String.Format("{0}/probe/detectorLabels", nirsLst[i]));
+                }
+                else
+                {
+                    for (int j = 0; j < probes[i].DetPos.GetLength(0); j++)
+                    {
+                        if (nirs.io.groupexists(fileId, String.Format("{0}/probe/detectorLabels{1}", nirsLst[i], j + 1)))
+                        {
+                            probes[i].DetectorLabels[j] = nirs.io.ReadDataString(fileId, String.Format("{0}/probe/detectorLabels{1}", nirsLst[i], j + 1));
+                        }
+                        else
+                        {
+                            probes[i].DetectorLabels[j] = string.Format("Detector-{0}", j + 1);
+                        }
+                    }
+                }
+                if (probes[i].LandmarkPos != null)
+                {
+                    probes[i].LandmarkLabels = new string[probes[i].LandmarkPos.GetLength(0)];
+                    if (nirs.io.groupexists(fileId, String.Format("{0}/probe/landmarkLabels", nirsLst[i])))
+                    {
+                        probes[i].LandmarkLabels = nirs.io.ReadDataStringArray(fileId,String.Format("{0}/probe/landmarkLabels", nirsLst[i]));
+                    }
+                    else
+                    {
+                        for (int j = 0; j < probes[i].LandmarkPos.GetLength(0); j++)
+                        {
+                            if (nirs.io.groupexists(fileId, String.Format("{0}/probe/landmarkLabels{1}", nirsLst[i], j + 1)))
+                            {
+                                probes[i].LandmarkLabels[j] = nirs.io.ReadDataString(fileId, String.Format("{0}/probe/landmarkLabels{1}", nirsLst[i], j + 1));
+                            }
+                            else
+                            {
+                                probes[i].LandmarkLabels[j] = string.Format("Landmark-{0}", j + 1);
+                            }
                         }
                     }
                 }
@@ -337,18 +357,18 @@ namespace nirs
 
 
                 double[,] d = nirs.io.ReadDataArray(fileId, String.Format("{0}/dataTimeSeries", dataLst[i]));
-                if (d.GetLength(0) == t.Length)
+                if (d.GetLength(1) == t.Length)
                 {
                     d = nirs.io.ReadDataArray(fileId, String.Format("{0}/dataTimeSeries", dataLst[i]), true);
                 }
 
-                data[i].data = new List<double>[d.GetLength(0)];
-                for (int ii = 0; ii < d.GetLength(0); ii++)
+                data[i].data = new List<double>[d.GetLength(1)];
+                for (int ii = 0; ii < d.GetLength(1); ii++)
                 {
                     data[i].data[ii] = new List<double>();
-                    for (int jj = 0; jj < d.GetLength(1); jj++)
+                    for (int jj = 0; jj < d.GetLength(0); jj++)
                     {
-                        data[i].data[ii].Add(d[ii, jj]);
+                        data[i].data[ii].Add(d[jj, ii]);
                     }
                 }
 
@@ -422,6 +442,8 @@ namespace nirs
 
         private static bool groupexists(hid_t fileLoc, string name)
         {
+
+            H5E.set_auto(0, null,IntPtr.Zero);
             hid_t dId = 0;
             try
             {
@@ -446,6 +468,66 @@ namespace nirs
 
             return (cl== H5T.class_t.STRING) ;
         }
+
+        private static string[] ReadDataStringArray(hid_t fileLoc, string name)
+        {
+            string[] vals;
+
+            hid_t dset = H5D.open(fileLoc, name);
+            hid_t type = H5D.get_type(dset);
+            // H5T.is_variable_str(type);
+            IntPtr size = H5T.get_size(type);
+
+            hid_t fspace = H5D.get_space(dset);
+            hid_t mem_type = H5T.copy(type);
+            H5T.set_size(mem_type, size);
+
+            hsize_t[] dims = new hsize_t[1];
+            hsize_t[] maxdims = new hsize_t[1];
+            H5S.get_simple_extent_dims(fspace, dims, maxdims);
+
+
+            byte[] buffer = new byte[size.ToInt32()*(int)dims[0]];
+            GCHandle hnd = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            H5D.read(dset, mem_type, H5S.ALL,
+            H5S.ALL, H5P.DEFAULT, hnd.AddrOfPinnedObject());
+
+            hnd.Free();
+
+            H5T.close(mem_type);
+
+            vals = new string[(int)dims[0]];
+
+            int cnt = 0;
+            for (int i=0; i<(int)dims[0]; i++)
+            {    
+                byte[] buffer2 = new byte[size.ToInt32()];
+                byte[] buffer2b = new byte[size.ToInt32()-1];
+                for(int ii=0; ii< size.ToInt32()-1; ii++)
+                {
+                    buffer2[ii] = buffer[cnt];
+                    buffer2b[ii] = buffer[cnt];
+                    cnt++;
+                }
+                if (buffer[cnt] == 0)
+                {
+                    vals[i] = ASCIIEncoding.ASCII.GetString(buffer2b);
+                    cnt++;
+                }
+                else
+                {
+                    buffer2[size.ToInt32()-1] = buffer[cnt];
+                    vals[i] = ASCIIEncoding.ASCII.GetString(buffer2);
+                    cnt++;
+                }
+
+
+            }
+
+
+            return vals; //
+        }
+    
 
         private static string ReadDataString(hid_t fileLoc, string name)
         {

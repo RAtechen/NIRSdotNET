@@ -63,80 +63,92 @@ namespace nirs
             H5G.get_num_objs(gId, ref nobj);
 
 
-            for(int i=0; i<(int)nobj; i++)
-            {
-                member_name = new System.Text.StringBuilder();
-                member_name.Capacity = 1024;
-                IntPtr len2 = H5G.get_objname_by_idx(gId, (ulong)i, member_name, MAX_NAME);
-                int objtype = H5G.get_objtype_by_idx(gId, (ulong)i);
+            
 
-                if(objtype == 0) //group
+                for (int i = 0; i < (int)nobj; i++)
                 {
-                    hid_t gId2 = H5G.open(gId, member_name.ToString());
-                    fields = ScanInfo(gId2,fields,string.Format("{0}/{1}", fullname, member_name));
+                    member_name = new System.Text.StringBuilder();
+                    member_name.Capacity = 1024;
+                    IntPtr len2 = H5G.get_objname_by_idx(gId, (ulong)i, member_name, MAX_NAME);
+                    int objtype = H5G.get_objtype_by_idx(gId, (ulong)i);
 
-
-                }
-                else if (objtype == 1) //Object is a dataset.
-                {
-                    HDF5info hDF5Info = new HDF5info();
-                    hid_t dset = H5D.open(gId, member_name.ToString());
-                    hid_t fspace = H5D.get_space(dset);
-                  
-                    hid_t count = H5S.get_simple_extent_ndims(fspace);
-                    hid_t type = H5D.get_type(dset);
-
-
-                    hDF5Info.HDFclass = getH5Tstring(type);
-                    hDF5Info.field = string.Format("{0}/{1}", fullname, member_name);
-                    if(H5T.get_class(type) == H5T.class_t.STRING)
+                    if (objtype == 0) //group
                     {
-                        hDF5Info.description = nirs.io.ReadDataString(gId, string.Format("{0}",member_name));
+                        hid_t gId2 = H5G.open(gId, member_name.ToString());
+                        fields = ScanInfo(gId2, fields, string.Format("{0}/{1}", fullname, member_name));
+
+
                     }
-                    else if (H5T.get_class(type) == H5T.class_t.FLOAT |
-                            H5T.get_class(type) == H5T.class_t.INTEGER )
+                    else if (objtype == 1) //Object is a dataset.
                     {
+                        HDF5info hDF5Info = new HDF5info();
+                        hid_t dset = H5D.open(gId, member_name.ToString());
+                        hid_t fspace = H5D.get_space(dset);
 
-                        hsize_t[] dims = new hsize_t[count];
-                        hsize_t[] maxdims = new hsize_t[count];
-                        H5S.get_simple_extent_dims(fspace, dims, maxdims);
-                        if(dims.Length==1 & dims[0]==1)
+                        hid_t count = H5S.get_simple_extent_ndims(fspace);
+                        hid_t type = H5D.get_type(dset);
+
+
+                        hDF5Info.HDFclass = getH5Tstring(type);
+                        hDF5Info.field = string.Format("{0}/{1}", fullname, member_name);
+                        if (H5T.get_class(type) == H5T.class_t.STRING)
                         {
-                            var  val = nirs.io.ReadDataValue(gId, string.Format("{0}", member_name));
-                            hDF5Info.description = string.Format("{0}", val);
-                        }
-                        else if (dims.Length == 1 & dims[0] > 1)
+                            hsize_t[] dims = new hsize_t[count];
+                            hsize_t[] maxdims = new hsize_t[count];
+                            H5S.get_simple_extent_dims(fspace, dims, maxdims);
+                        if (dims[0] == 1)
                         {
-                            hDF5Info.description = string.Format("Vector <{0} x 1>", dims[0]);
+                            hDF5Info.description = string.Format("\"{0}\"", nirs.io.ReadDataString(gId, string.Format("{0}", member_name)));
                         }
                         else
                         {
-                            hDF5Info.description = string.Format("Array <{0} x {1}>", dims[0], dims[1]);
-
-                            if(hDF5Info.field.Contains("dataTimeSeries") & dims[0] > dims[1])
-                            {
-                                hDF5Info.description += " TRANSPOSE WARNING ";
-                            }
-                            if (hDF5Info.field.Contains("Pos") & dims[1]!=3)
-                            {
-                                hDF5Info.description += " TRANSPOSE WARNING ";
-                            }
-                            if (hDF5Info.field.Contains("stim") & hDF5Info.field.Contains("data") & dims[1] != 3)
-                            {
-                                hDF5Info.description += " TRANSPOSE WARNING ";
-                            }
+                            hDF5Info.description = string.Format("STRING Vector <{0} x 1> ", dims[0]);
                         }
+                        }
+                        else if (H5T.get_class(type) == H5T.class_t.FLOAT |
+                                H5T.get_class(type) == H5T.class_t.INTEGER)
+                        {
 
+                            hsize_t[] dims = new hsize_t[count];
+                            hsize_t[] maxdims = new hsize_t[count];
+                            H5S.get_simple_extent_dims(fspace, dims, maxdims);
+                            if (dims.Length == 1 & dims[0] == 1)
+                            {
+                                var val = nirs.io.ReadDataValue(gId, string.Format("{0}", member_name));
+                                hDF5Info.description = string.Format("{0}", val);
+                            }
+                            else if (dims.Length == 1 & dims[0] > 1)
+                            {
+                                hDF5Info.description = string.Format("Vector <{0} x 1>", dims[0]);
+                            }
+                            else
+                            {
+                                hDF5Info.description = string.Format("Array <{0} x {1}>", dims[0], dims[1]);
+
+                                if (hDF5Info.field.Contains("dataTimeSeries") & dims[1] > dims[0])
+                                {
+                                    hDF5Info.description += " TRANSPOSE WARNING ";
+                                }
+                                if (hDF5Info.field.Contains("Pos") & dims[1] > 3)
+                                {
+                                    hDF5Info.description += " TRANSPOSE WARNING ";
+                                }
+                                if (hDF5Info.field.Contains("stim") & hDF5Info.field.Contains("data") & dims[1] != 3)
+                                {
+                                    hDF5Info.description += " TRANSPOSE WARNING ";
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            hDF5Info.description = "";
+                        }
+                        fields.Add(hDF5Info);
                     }
-                    else
-                    {
-                        hDF5Info.description = "";
-                    }
-                    fields.Add(hDF5Info);
+
                 }
-
-            }
-
+            
 
             H5G.close(gId);
 
