@@ -173,8 +173,8 @@ namespace nirs
                 da.GetSize(out width, out height);
 
                 double dx, dy;
-                dx = 20;
-                dy = 20;
+                dx = 30;
+                dy = 30;
                 width = width - 2 * (int)dy;
                 height = height - 2 * (int)dx;
 
@@ -317,7 +317,7 @@ namespace nirs
 
                Gtk.Label lab2 = new Gtk.Label();
                lab2.Text = "Right";
-                da.DrawLayout(gc, (int)(width*.02), (int)(height*.98+dy), lab2.Layout);
+                da.DrawLayout(gc, (int)(width*.01), (int)(height+dy+10), lab2.Layout);
               
 
 
@@ -547,7 +547,7 @@ namespace nirs
 
                 double distance;
                 double cutoff = 5;
-                double cutoff2 = 2;
+                double cutoff2 = 5;
 
                 if (this.measlistAct == null)
                 {

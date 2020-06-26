@@ -76,10 +76,16 @@ public partial class MainWindow : Window
                 MainClass.devices[i].Stop();
                 MainClass.devices[i].AllOff();
                 MainClass.devices[i].FlushBuffer();
-                maindisplaythread.Abort();
+                if (maindisplaythread != null)
+                {
+                    maindisplaythread.Abort();
+                }
             }
         }
-        batteryCheck.Abort();
+        if (batteryCheck != null)
+        {
+            batteryCheck.Abort();
+        }
        
         Destroy();
         Application.Quit();
